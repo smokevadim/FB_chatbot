@@ -2,7 +2,7 @@ from flask import Flask, request
 import random
 from pymessenger import bot
 
-ACCESS_TOKEN = 'EAANf5If7nRwBAA2EY7TZBZAtfjMQoNphZA6EHIbXjAvCSGDwpndjP8kYlCZAApOmh34qa3RZCuZCzc8Y7aaMOnjv2XRZBmAAZCwssmV7h2iprhkoCJjE78O318PWxFGWb7zcFFZAkHvTIboAN64HheKnQAfqZB3a4PVy6Vo7GILo8hcwZDZD'
+VERIFY_TOKEN = 'EAANf5If7nRwBAA2EY7TZBZAtfjMQoNphZA6EHIbXjAvCSGDwpndjP8kYlCZAApOmh34qa3RZCuZCzc8Y7aaMOnjv2XRZBmAAZCwssmV7h2iprhkoCJjE78O318PWxFGWb7zcFFZAkHvTIboAN64HheKnQAfqZB3a4PVy6Vo7GILo8hcwZDZD'
 app = Flask(__name__)
 
 def verify_fb_token(token_sent):
@@ -27,7 +27,9 @@ def get_message():
 @app.route('/', methods=['GET', 'POST'])
 def receive_message():
     if request.method == 'GET':
-        token_sent = request.args['hub.verify_token']
+        token_sent = ''
+        if not request.args.get('hub.verify_token') == None:
+            token_sent = request.args['hub.verify_token']
         return verify_fb_token(token_sent)
     else:
         output = request.get_json()
