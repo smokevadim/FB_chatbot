@@ -39,11 +39,11 @@ def receive_message():
                 if message.get('message'):
                     # ID
                     recipient_id = message['sender']['id']
-                    if message['message'].get['text']:
+                    if message['message'].get('text'):
                         response_sent_text = get_message()
                         send_message(recipient_id, response_sent_text)
                     # attachments
-                    if message['message'].get['attachments']:
+                    if message['message'].get('attachments'):
                         response_sent_nontext = get_message()
                         send_message(recipient_id, response_sent_nontext)
         return 'Message processed'
