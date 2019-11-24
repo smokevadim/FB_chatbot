@@ -46,23 +46,24 @@ def lambda_handler(event, context):
             print('---------\nEvent:{}\n-------------{}\n-------------'.format(event, context))
             if event['body'] is not None and 'entry' in event['body']:
                 p(event['body'])
-                entry = event['body']['entry']
-                p(entry)
-                if entry is not None and 'messaging' in entry:
-                    messaging = entry['messaging']
-                    p(messaging)
-                    for message in messaging:
-                        if message is not None and 'message' in message:
-                            # ID
-                            p(message)
-                            recipient_id = message['sender']['id']
-                            if message['message'].get('text'):
-                                response_sent_text = get_message()
-                                send_message(recipient_id, response_sent_text)
-                            # attachments
-                            if message['message'].get('attachments'):
-                                response_sent_nontext = get_message()
-                                send_message(recipient_id, response_sent_nontext)
+                entries = json.loads(event['body'])['entry']
+                p(entries)
+                for entry in entries:
+                    if entry is not None and 'messaging' in entry:
+                        messaging = entry['messaging']
+                        p(messaging)
+                        for message in messaging:
+                            if message is not None and 'message' in message:
+                                # ID
+                                p(message)
+                                recipient_id = message['sender']['id']
+                                if message['message'].get('text'):
+                                    response_sent_text = get_message()
+                                    send_message(recipient_id, response_sent_text)
+                                # attachments
+                                if message['message'].get('attachments'):
+                                    response_sent_nontext = get_message()
+                                    send_message(recipient_id, response_sent_nontext)
             return {
                 'statusCode': 200,
                 'body': json.dumps('OK')
