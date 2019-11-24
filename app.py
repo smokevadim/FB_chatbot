@@ -1,10 +1,9 @@
-from flask import Flask, request
 import json
 import random
 from pymessenger.bot import Bot
 
-VERIFY_TOKEN = 'EAANf5If7nRwBAA2EY7TZBZAtfjMQoNphZA6EHIbXjAvCSGDwpndjP8kYlCZAApOmh34qa3RZCuZCzc8Y7aaMOnjv2XRZBmAAZCwssmV7h2iprhkoCJjE78O318PWxFGWb7zcFFZAkHvTIboAN64HheKnQAfqZB3a4PVy6Vo7GILo8hcwZDZD'
-#app = Flask(__name__)
+VERIFY_TOKEN = 'EAANf5If7nRwBAG8xkZCezBXQVaVozUZAVRhP49o0pAm4jTr9P4Wfu1GtAuqfUc8qBWScenTf81D235duDCKkZAdPc40zBppGRrNvXIq6opXIF4lZBoKGyGukgT2BvWYEYYZASUukKXrB6YBNUzXHnRS5ZCLzfpf0SjouyRuB3KGYM3qrR4Rg0E'
+
 
 def verify_fb_token(event, token_sent):
     '''Check token from FB'''
@@ -26,61 +25,48 @@ def get_message():
     return random.choice(sample_messages)
 
 
-#@app.route('/', methods=['GET', 'POST'])
-def receive_message():
-    if request.method == 'GET':
-        token_sent = ''
-        if not request.args.get('hub.verify_token') == None:
-            token_sent = request.args['hub.verify_token']
-        return verify_fb_token(token_sent)
-    else:
-        output = request.get_json()
-        for event in output['entry']:
-            messaging = event['messaging']
-            for message in messaging:
-                if message.get('message'):
-                    # ID
-                    recipient_id = message['sender']['id']
-                    if message['message'].get('text'):
-                        response_sent_text = get_message()
-                        send_message(recipient_id, response_sent_text)
-                    # attachments
-                    if message['message'].get('attachments'):
-                        response_sent_nontext = get_message()
-                        send_message(recipient_id, response_sent_nontext)
-        return 'Message processed'
+def p(message):
+    print('>>>{}>>>{}'.format(type(message), message))
 
 
 def lambda_handler(event, context):
-    if event.get('httpMethod') == 'GET':
-        token_sent = ''
-        if not event.get('queryStringParameters').get('hub.verify_token') == None:
-            token_sent = event['queryStringParameters']['hub.verify_token']
-        #print(event.get('queryStringParameters').get('hub.challenge'))
-        return verify_fb_token(event, token_sent)
+    if 'httpMethod' in event:
 
+        # this is GET request
+        if event['httpMethod'] == 'GET':
+            if ('queryStringParameters' in event) and ('hub.verify_token' in event['queryStringParameters']):
+                token_sent = event['queryStringParameters']['hub.verify_token']
+                return {
+                    'statusCode': 200,
+                    'body': verify_fb_token(event, token_sent)
+                }
 
-        # output = event
-        # for event in output['entry']:
-        #     messaging = event['messaging']
-        #     for message in messaging:
-        #         if message.get('message'):
-        #             # ID
-        #             recipient_id = message['sender']['id']
-        #             if message['message'].get('text'):
-        #                 response_sent_text = get_message()
-        #                 send_message(recipient_id, response_sent_text)
-        #             # attachments
-        #             if message['message'].get('attachments'):
-        #                 response_sent_nontext = get_message()
-        #                 send_message(recipient_id, response_sent_nontext)
-    else:
-        return {
-            'statusCode': 200,
-            'body': json.dumps('OK')
-        }
-
-
-# if __name__ == '__main__':
-#     app.run()
-
+        # this is POST request
+        else:
+            print('---------\nEvent:{}\n-------------{}\n-------------'.format(event, context))
+            if event['body'] is not None and 'entry' in event['body']:
+                p(event['body'])
+                entry = event['body']['entry']
+                p(entry)
+                if entry is not None and 'messaging' in entry:
+                    messaging = entry['messaging']
+                    p(messaging)
+                    for message in messaging:
+                        if message is not None and 'message' in message:
+                            # ID
+                            p(message)
+                            recipient_id = message['sender']['id']
+                            if message['message'].get('text'):
+                                response_sent_text = get_message()
+                                send_message(recipient_id, response_sent_text)
+                            # attachments
+                            if message['message'].get('attachments'):
+                                response_sent_nontext = get_message()
+                                send_message(recipient_id, response_sent_nontext)
+            return {
+                'statusCode': 200,
+                'body': json.dumps('OK')
+            }
+    return {
+        'statusCode': 403
+    }
