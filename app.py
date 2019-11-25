@@ -1,8 +1,7 @@
 import json
 import random
 from pymessenger.bot import Bot
-
-VERIFY_TOKEN = 'EAANf5If7nRwBAG8xkZCezBXQVaVozUZAVRhP49o0pAm4jTr9P4Wfu1GtAuqfUc8qBWScenTf81D235duDCKkZAdPc40zBppGRrNvXIq6opXIF4lZBoKGyGukgT2BvWYEYYZASUukKXrB6YBNUzXHnRS5ZCLzfpf0SjouyRuB3KGYM3qrR4Rg0E'
+from vars import *
 
 
 def verify_fb_token(event, token_sent):
