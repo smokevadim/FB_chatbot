@@ -18,7 +18,7 @@ def send_message(recipient_id, message):
     return 'success'
 
 
-def get_message():
+def get_random_message():
     '''Random messages'''
     sample_messages = ['Great!', 'Its awesome!', 'Just do it again!', 'Cool!!!']
     return random.choice(sample_messages)
