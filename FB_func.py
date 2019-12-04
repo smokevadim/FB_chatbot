@@ -1,4 +1,3 @@
-import json
 import random
 from pymessenger.bot import Bot
 from tokens import *
@@ -9,6 +8,13 @@ def verify_fb_token(hub_challenge, token_sent):
     if token_sent == FB_VERIFY_TOKEN:
         return hub_challenge
     return 'Invalid verification token!'
+
+
+def send_image(recipient_id, image):
+    '''Send image to user in FB'''
+    chatbot = Bot(FB_VERIFY_TOKEN)
+    chatbot.send_image(recipient_id, image)
+    return 'success'
 
 
 def send_message(recipient_id, message):

@@ -1,6 +1,8 @@
 from FB_func import *
+from google_func import *
 from flask import Flask, request
 import json
+
 
 app = Flask(__name__)
 
@@ -61,18 +63,22 @@ def proceed_message(messaging):
                 if not make_action(recipient_id, incoming_message):
                     send_message(recipient_id, get_random_message())
             # attachments
-            if message['message'].get('attachments'):
-                response_sent_nontext = get_message()
-                send_message(recipient_id, response_sent_nontext)
+            # if message['message'].get('attachments'):
+            #     response_sent_nontext = get_random_message()
+            #     send_message(recipient_id, response_sent_nontext)
 
 
 def make_action(recipient_id, incoming_message):
-    if 'где Таня?' in incoming_message:
-        response_sent_text = 'Рядом с тобой епта, читает это сообщение! ))'
-    elif 'кто я?' in incoming_message:
-        response_sent_text = 'Конь в пальто! ))'
+    response_sent_text = ''
+    if '/help' in incoming_message.lower():
+        response_sent_text = 'This is the FaceBook message bot,\nplease ask me "cat" if you want get pic of cuttie cat )'
+    elif 'cat' in incoming_message.lower():
+        download_image(get_random_cat_image(incoming_message.lower()))
+        send_image(recipient_id, 'cat.jpg')
+        return True
     else:
         return False
+
     send_message(recipient_id,response_sent_text)
     return True
 

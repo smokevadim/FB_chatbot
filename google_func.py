@@ -13,7 +13,7 @@ def get_random_image(q=''):
             return "/ᐠ｡ꞈ｡ᐟ\\"
 
 def get_random_cat_image(q=''):
-    return(get_random_image('cute+cat+'+q))
+    return get_random_image('cute+' + q)
 
 
 def google_search(search_term, api_key, cse_id, **kwargs):
@@ -31,6 +31,6 @@ def download_image(url):
             f.write(req.content)
     return url
 
-if __name__ == '__main__':
-    download_image(get_random_cat_image('МЯУ'))
+#if __name__ == '__main__':
+    #download_image(get_random_cat_image('Maw'))
 
