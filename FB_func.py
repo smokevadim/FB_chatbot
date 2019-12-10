@@ -1,5 +1,4 @@
 import random
-from pymessenger.bot import Bot
 from tokens import *
 import json
 import os
@@ -19,17 +18,6 @@ def verify_fb_token(hub_challenge, token_sent):
     return 'Invalid verification token!'
 
 
-# def send_message(recipient_id, message):
-#     """
-#     Send txt message to user in FB
-#     :param recipient_id:
-#     :param message:
-#     :return: 'success'
-#     """
-#     chatbot = Bot(FB_VERIFY_TOKEN)
-#     chatbot.send_text_message(recipient_id, message)
-#     return 'success'
-
 def send_message(recipient_id, message_text):
     """
     direct request to messenger
@@ -37,30 +25,22 @@ def send_message(recipient_id, message_text):
     :param message_text:
     :return:
     """
-    params = {
-        "access_token": FB_VERIFY_TOKEN
-    }
+    params = {"access_token": FB_VERIFY_TOKEN}
 
     data = {
         'recipient': json.dumps({
             'id': recipient_id
         }),
         'message': json.dumps({
-            'body': {
-                'type': 'image',
-                'payload': {}
-            }
-        }),
-        'filedata': (os.path.basename('cat.jpg'), open('cat.jpg', 'rb'), 'image/png')
+            'text': message_text
+        })
     }
 
     multipart_data = MultipartEncoder(data)
 
-    multipart_header = {
-        'Content-Type': multipart_data.content_type
-    }
+    multipart_header = {'Content-Type': multipart_data.content_type}
 
-    r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=multipart_header,
+    r = requests.post("https://graph.facebook.com/v5.0/me/messages", params=params, headers=multipart_header,
                       data=multipart_data)
     if r.status_code != 200:
         send_message(recipient_id, 'Repeat please?')
@@ -74,9 +54,7 @@ def send_image(recipient_id, message_text):
     :param message_text:
     :return:
     """
-    params = {
-        "access_token": FB_VERIFY_TOKEN
-    }
+    params = {"access_token": FB_VERIFY_TOKEN}
 
     data = {
         'recipient': json.dumps({
@@ -92,12 +70,9 @@ def send_image(recipient_id, message_text):
     }
 
     multipart_data = MultipartEncoder(data)
+    multipart_header = {'Content-Type': multipart_data.content_type}
 
-    multipart_header = {
-        'Content-Type': multipart_data.content_type
-    }
-
-    r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=multipart_header,
+    r = requests.post("https://graph.facebook.com/v5.0/me/messages", params=params, headers=multipart_header,
                       data=multipart_data)
     if r.status_code != 200:
         send_message(recipient_id, 'Repeat please?')
