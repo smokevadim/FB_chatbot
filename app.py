@@ -62,10 +62,6 @@ def proceed_message(messaging):
                 # here we can do what we want: read message and basic answer or execute action etc
                 if not make_action(recipient_id, incoming_message):
                     send_message(recipient_id, get_random_message())
-            # attachments
-            # if message['message'].get('attachments'):
-            #     response_sent_nontext = get_random_message()
-            #     send_message(recipient_id, response_sent_nontext)
 
 
 def make_action(recipient_id, incoming_message):
