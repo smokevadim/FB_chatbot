@@ -1,7 +1,6 @@
 import random
 from tokens import *
 import json
-import os
 from requests_toolbelt import MultipartEncoder
 import requests
 
@@ -66,7 +65,7 @@ def send_image(recipient_id, message_text):
                 'payload': {}
             }
         }),
-        'filedata': (os.path.basename('cat.jpg'), open('cat.jpg', 'rb'), 'image/png')
+        'filedata': ('cat.jpg', open('/tmp/cat.jpg', 'rb'), 'image/png')
     }
 
     multipart_data = MultipartEncoder(data)

@@ -32,7 +32,7 @@ def google_search(search_term, api_key, cse_id, **kwargs):
     :param kwargs:
     :return:
     """
-    service = build("customsearch", "v1", developerKey=api_key)
+    service = build("customsearch", "v1", developerKey=api_key, cache_discovery=False)
     res = service.cse().list(q=search_term, cx=cse_id, **kwargs).execute()
     if int(res['searchInformation']['totalResults'])>0:
         return res['items']
@@ -47,7 +47,7 @@ def download_image(url):
     """
     if 'http' in url:
         req = requests.get(url)
-        with open('cat.jpg', 'wb') as f:
+        with open('/tmp/cat.jpg', 'wb') as f:
             f.write(req.content)
     return url
 
